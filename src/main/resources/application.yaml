@@ -1,0 +1,25 @@
+spring:
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+  data:
+    rest:
+      detection-strategy: annotated
+    web:
+      pageable:
+        one-indexed-parameters: true
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org:
+        quartz:
+          jobStore:
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+  flyway:
+    out-of-order: true
