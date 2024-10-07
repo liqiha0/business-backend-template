@@ -1,0 +1,2 @@
+org.springframework.boot.env.EnvironmentPostProcessor=io.github.liqiha0.template.starter.env.DefaultAppEnvironmentPostProcessor
+
