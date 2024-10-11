@@ -1,7 +1,7 @@
 package io.github.liqiha0.backendtemplate.interfaces.controller.vben.system
 
-import io.github.liqiha0.backendtemplate.application.system.RbacService
-import io.github.liqiha0.backendtemplate.application.system.TokenManager
+import io.github.liqiha0.backendtemplate.domain.service.system.RbacService
+import io.github.liqiha0.backendtemplate.domain.service.system.TokenManager
 import io.github.liqiha0.backendtemplate.domain.model.system.AdminAccountRepository
 import io.github.liqiha0.backendtemplate.domain.model.system.Authority
 import io.github.liqiha0.backendtemplate.utils.userId

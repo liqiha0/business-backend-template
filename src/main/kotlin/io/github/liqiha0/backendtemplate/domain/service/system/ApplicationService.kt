@@ -1,4 +1,4 @@
-package io.github.liqiha0.backendtemplate.application.system
+package io.github.liqiha0.backendtemplate.domain.service.system
 
 import io.github.liqiha0.backendtemplate.domain.model.system.AccountRepository
 import io.github.liqiha0.backendtemplate.domain.model.system.TokenRepository
@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
-class AccountApplicationService(
+class ApplicationService(
     private val accountRepository: AccountRepository,
     private val tokenRepository: TokenRepository
 ) {

@@ -4,6 +4,7 @@ import io.github.liqiha0.backendtemplate.domain.model.system.AccountRepository
 import io.github.liqiha0.backendtemplate.domain.model.system.AdminAccountRepository
 import io.github.liqiha0.backendtemplate.domain.model.system.Authority
 import io.github.liqiha0.backendtemplate.domain.model.system.UserAccount
+import io.github.liqiha0.backendtemplate.domain.service.system.RbacService
 import org.springframework.context.annotation.Primary
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.authority.AuthorityUtils

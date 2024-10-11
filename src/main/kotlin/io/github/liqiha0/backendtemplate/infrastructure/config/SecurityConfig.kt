@@ -1,7 +1,7 @@
 package io.github.liqiha0.backendtemplate.infrastructure.config
 
 import io.github.liqiha0.backendtemplate.application.system.AdminUserDetailService
-import io.github.liqiha0.backendtemplate.application.system.AuthorityRegistry
+import io.github.liqiha0.backendtemplate.domain.model.system.AuthorityRegistry
 import io.github.liqiha0.backendtemplate.application.system.TokenUserDetailService
 import io.github.liqiha0.backendtemplate.domain.model.system.Authority
 import io.github.liqiha0.backendtemplate.domain.model.system.TokenRepository

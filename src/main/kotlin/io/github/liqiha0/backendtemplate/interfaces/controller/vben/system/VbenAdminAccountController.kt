@@ -1,6 +1,6 @@
 package io.github.liqiha0.backendtemplate.interfaces.controller.vben.system
 
-import io.github.liqiha0.backendtemplate.application.system.AdminAccountService
+import io.github.liqiha0.backendtemplate.domain.service.system.AdminAccountService
 import io.github.liqiha0.backendtemplate.domain.model.system.AdminAccount
 import io.github.liqiha0.backendtemplate.domain.model.system.AdminAccountRepository
 import io.github.liqiha0.backendtemplate.interfaces.controller.vben.VbenResponse

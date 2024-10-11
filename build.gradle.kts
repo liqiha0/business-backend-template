@@ -34,8 +34,6 @@ dependencies {
     implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.8.1")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.6.0")
-    implementation("com.github.binarywang:wx-java-miniapp-spring-boot-starter:4.6.0")
-    implementation("com.github.binarywang:wx-java-pay-spring-boot-starter:4.6.0")
 
     runtimeOnly("org.postgresql:postgresql")
 

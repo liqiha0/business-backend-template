@@ -1,6 +1,6 @@
 package io.github.liqiha0.backendtemplate.interfaces.controller.vben.system
 
-import io.github.liqiha0.backendtemplate.application.system.AuthorityRegistry
+import io.github.liqiha0.backendtemplate.domain.model.system.AuthorityRegistry
 import io.github.liqiha0.backendtemplate.domain.model.system.Authority
 import io.github.liqiha0.backendtemplate.domain.model.system.Role
 import io.github.liqiha0.backendtemplate.domain.model.system.RoleRepository

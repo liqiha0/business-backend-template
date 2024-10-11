@@ -17,15 +17,6 @@ create table admin_account
     role_ids jsonb                                    not null
 );
 
-create table user_account
-(
-    id                uuid references account (id) primary key not null,
-    wechat_binding_id uuid references wechat_binding (id),
-    phone_number      text                                     not null,
-    avatar            text,
-    unique (phone_number)
-);
-
 create table wechat_binding
 (
     id          uuid primary key not null,
@@ -33,6 +24,15 @@ create table wechat_binding
     session_key text             not null,
     union_id    text,
     unique (open_id)
+);
+
+create table user_account
+(
+    id                uuid references account (id) primary key not null,
+    wechat_binding_id uuid references wechat_binding (id),
+    phone_number      text                                     not null,
+    avatar            text,
+    unique (phone_number)
 );
 
 create table role
