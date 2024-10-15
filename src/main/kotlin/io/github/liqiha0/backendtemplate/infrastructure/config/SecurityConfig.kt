@@ -1,9 +1,9 @@
 package io.github.liqiha0.backendtemplate.infrastructure.config
 
 import io.github.liqiha0.backendtemplate.application.system.AdminUserDetailService
-import io.github.liqiha0.backendtemplate.domain.model.system.AuthorityRegistry
 import io.github.liqiha0.backendtemplate.application.system.TokenUserDetailService
 import io.github.liqiha0.backendtemplate.domain.model.system.Authority
+import io.github.liqiha0.backendtemplate.domain.model.system.AuthorityRegistry
 import io.github.liqiha0.backendtemplate.domain.model.system.TokenRepository
 import io.github.liqiha0.backendtemplate.infrastructure.security.TokenAuthenticationFilter
 import org.springframework.context.annotation.Bean
@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
@@ -87,7 +88,7 @@ class SecurityConfig {
     }
 
     @Bean
-    fun daoAuthenticationProvider(
+    fun adminAuthenticationProvider(
         userDetailsService: AdminUserDetailService,
         passwordEncoder: PasswordEncoder,
     ): DaoAuthenticationProvider {
@@ -104,14 +105,9 @@ class SecurityConfig {
 
     @Bean
     fun authenticationManager(
-        daoAuthenticationProvider: DaoAuthenticationProvider,
-        preAuthenticatedAuthenticationProvider: PreAuthenticatedAuthenticationProvider
+        authenticationProviders: List<AuthenticationProvider>
     ): AuthenticationManager {
-        val providerManager = ProviderManager(
-            daoAuthenticationProvider,
-            preAuthenticatedAuthenticationProvider
-        )
-        return providerManager
+        return ProviderManager(authenticationProviders)
     }
 
     @Bean

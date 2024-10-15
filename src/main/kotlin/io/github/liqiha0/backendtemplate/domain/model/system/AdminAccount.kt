@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import java.util.*
 
 const val DEFAULT_ADMIN_USERNAME = "admin"
+const val DEFAULT_ADMIN_PASSWORD = "admin123"
 
 @Entity
 class AdminAccount(

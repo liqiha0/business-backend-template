@@ -8,18 +8,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.web.DefaultSecurityFilterChain
 import java.nio.file.Path
 
 @Configuration
-@EnableConfigurationProperties(FileStorageProperty::class, LocalFileStorageProperty::class)
+@EnableConfigurationProperties(FileStorageProperty::class)
 class FileStorageConfig {
     @Bean
     @ConditionalOnProperty(prefix = "file-storage", name = ["backend"], havingValue = "LOCAL")
     fun localFileStorageService(fileStorageProperty: FileStorageProperty): FileStorage {
-        return LocalFileStorage(fileStorageProperty.local.path, fileStorageProperty.local.publicBaseUrl)
+        val local = fileStorageProperty.local!!
+        return LocalFileStorage(local.path, local.publicBaseUrl)
     }
 
     @Bean
@@ -33,11 +33,14 @@ class FileStorageConfig {
 }
 
 @ConfigurationProperties(prefix = "file-storage")
-data class FileStorageProperty(val backend: FileStorageBackend, val local: LocalFileStorageProperty)
+data class FileStorageProperty(
+    val backend: FileStorageBackend = FileStorageBackend.NONE,
+    val local: LocalFileStorageProperty? = null
+)
 
-@ConfigurationProperties(prefix = "file-storage.local")
 class LocalFileStorageProperty(val publicBaseUrl: String, val path: Path)
 
 enum class FileStorageBackend {
+    NONE,
     LOCAL
 }

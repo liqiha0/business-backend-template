@@ -26,11 +26,20 @@ create table wechat_binding
     unique (open_id)
 );
 
+create table alipay_binding
+(
+    id           uuid primary key not null,
+    open_id      text             not null,
+    access_token text             not null,
+    unique (open_id)
+);
+
 create table user_account
 (
     id                uuid references account (id) primary key not null,
+    phone_number      text,
     wechat_binding_id uuid references wechat_binding (id),
-    phone_number      text                                     not null,
+    alipay_binding_id uuid references alipay_binding (id),
     avatar            text,
     unique (phone_number)
 );

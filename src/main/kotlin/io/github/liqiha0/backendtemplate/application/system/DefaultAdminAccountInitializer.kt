@@ -1,6 +1,7 @@
 package io.github.liqiha0.backendtemplate.application.system
 
 import io.github.liqiha0.backendtemplate.domain.model.system.AdminAccountRepository
+import io.github.liqiha0.backendtemplate.domain.model.system.DEFAULT_ADMIN_PASSWORD
 import io.github.liqiha0.backendtemplate.domain.model.system.DEFAULT_ADMIN_USERNAME
 import io.github.liqiha0.backendtemplate.domain.model.system.usernameEqual
 import io.github.liqiha0.backendtemplate.domain.service.system.AdminAccountService
@@ -21,7 +22,7 @@ class DefaultAdminAccountInitializer(
             this.accountService.create(
                 "超级管理员",
                 DEFAULT_ADMIN_USERNAME,
-                this.passwordEncoder.encode("admin123")
+                DEFAULT_ADMIN_PASSWORD
             )
         }
     }

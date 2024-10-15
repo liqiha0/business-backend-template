@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
-class ApplicationService(
+class AccountService(
     private val accountRepository: AccountRepository,
     private val tokenRepository: TokenRepository
 ) {

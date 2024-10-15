@@ -23,9 +23,13 @@ class UserAccount(displayName: String, phoneNumber: String? = null, var avatar: 
             field = value
         }
 
-    @OneToOne(cascade = [(CascadeType.ALL)], orphanRemoval = true)
+    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
     @Schema(description = "微信绑定")
     var wechatBinding: WechatBinding? = null
+
+    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @Schema(description = "支付宝绑定")
+    var alipayBinding: AlipayBinding? = null
 
     @PrePersist
     fun onCreate() {
@@ -43,6 +47,14 @@ class WechatBinding(val openId: String, val sessionKey: String, unionId: String?
         internal set
 }
 
+@Entity
+class AlipayBinding(var accessToken: String, val openId: String) {
+    @Id
+    @UuidGenerator
+    lateinit var id: UUID
+        internal set
+}
+
 interface UserAccountRepository : JpaRepository<UserAccount, UUID>, JpaSpecificationExecutor<UserAccount>
 
 fun phoneNumberEqual(phoneNumber: String): Specification<UserAccount> {
@@ -54,5 +66,10 @@ fun phoneNumberEqual(phoneNumber: String): Specification<UserAccount> {
 fun wechatOpenIdEqual(openId: String): Specification<UserAccount> {
     return Specification<UserAccount> { root, query, criteriaBuilder ->
         criteriaBuilder.equal(root.get<WechatBinding>("wechatBinding").get<String>("openId"), openId)
+    }
+}
+fun alipayOpenIdEqual(openId: String): Specification<UserAccount> {
+    return Specification<UserAccount> { root, query, criteriaBuilder ->
+        criteriaBuilder.equal(root.get<WechatBinding>("alipayBinding").get<String>("openId"), openId)
     }
 }
