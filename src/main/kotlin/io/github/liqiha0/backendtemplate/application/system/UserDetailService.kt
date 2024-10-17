@@ -1,9 +1,6 @@
 package io.github.liqiha0.backendtemplate.application.system
 
-import io.github.liqiha0.backendtemplate.domain.model.system.AccountRepository
-import io.github.liqiha0.backendtemplate.domain.model.system.AdminAccountRepository
-import io.github.liqiha0.backendtemplate.domain.model.system.Authority
-import io.github.liqiha0.backendtemplate.domain.model.system.UserAccount
+import io.github.liqiha0.backendtemplate.domain.model.system.*
 import io.github.liqiha0.backendtemplate.domain.service.system.RbacService
 import org.springframework.context.annotation.Primary
 import org.springframework.data.repository.findByIdOrNull
@@ -42,14 +39,15 @@ class TokenUserDetailService(
     @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
     override fun loadUserByUsername(username: String): UserDetails {
         val account = this.accountRepository.findByIdOrNull(UUID.fromString(username)) ?: throw UsernameNotFoundException(username)
-        if (account is UserAccount) {
+        if (account is AdminAccount){
+            val authorities = this.rbacService.getAuthoritiesOfAccount(account.id)
+            return User(
+                account.id.toString(),
+                "N/A",
+                AuthorityUtils.createAuthorityList(authorities.map(Authority::key))
+            )
+        }else{
             return User(account.id.toString(), "N/A", AuthorityUtils.NO_AUTHORITIES)
         }
-        val authorities = this.rbacService.getAuthoritiesOfAccount(account.id)
-        return User(
-            account.id.toString(),
-            "N/A",
-            AuthorityUtils.createAuthorityList(authorities.map(Authority::key))
-        )
     }
 }
