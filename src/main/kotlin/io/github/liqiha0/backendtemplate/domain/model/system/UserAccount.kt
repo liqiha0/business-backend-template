@@ -4,14 +4,16 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.*
 import org.hibernate.annotations.UuidGenerator
 import org.springframework.data.jpa.domain.Specification
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import java.net.URL
 import java.util.*
 
 @Entity
-class UserAccount(displayName: String, phoneNumber: String? = null, var avatar: URL? = null) :
-    Account<UserAccount>(displayName) {
+class UserAccount(
+    displayName: String,
+    phoneNumber: String? = null,
+    var avatar: URL? = null,
+    roleIds: Set<UUID> = emptySet()
+) : Account<UserAccount>(displayName, roleIds = roleIds) {
 
     init {
         phoneNumber?.run { check(this.isNotBlank()) }
@@ -55,11 +57,17 @@ class AlipayBinding(var accessToken: String, val openId: String) {
         internal set
 }
 
-interface UserAccountRepository : JpaRepository<UserAccount, UUID>, JpaSpecificationExecutor<UserAccount>
+interface UserAccountRepository : AccountRepository<UserAccount>
 
 fun phoneNumberEqual(phoneNumber: String): Specification<UserAccount> {
     return Specification<UserAccount> { root, query, criteriaBuilder ->
         criteriaBuilder.equal(root.get<String>("phoneNumber"), phoneNumber)
+    }
+}
+
+fun phoneNumberLike(phoneNumber: String): Specification<UserAccount> {
+    return Specification<UserAccount> { root, query, criteriaBuilder ->
+        criteriaBuilder.like(root.get<String>("phoneNumber"), phoneNumber)
     }
 }
 
@@ -68,6 +76,7 @@ fun wechatOpenIdEqual(openId: String): Specification<UserAccount> {
         criteriaBuilder.equal(root.get<WechatBinding>("wechatBinding").get<String>("openId"), openId)
     }
 }
+
 fun alipayOpenIdEqual(openId: String): Specification<UserAccount> {
     return Specification<UserAccount> { root, query, criteriaBuilder ->
         criteriaBuilder.equal(root.get<WechatBinding>("alipayBinding").get<String>("openId"), openId)

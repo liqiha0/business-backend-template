@@ -22,7 +22,7 @@ class DefaultAdminAccountInitializer(
             this.accountService.create(
                 "超级管理员",
                 DEFAULT_ADMIN_USERNAME,
-                DEFAULT_ADMIN_PASSWORD
+                this.passwordEncoder.encode(DEFAULT_ADMIN_PASSWORD)
             )
         }
     }

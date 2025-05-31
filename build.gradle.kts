@@ -2,19 +2,21 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.3.0"
-    id("io.spring.dependency-management") version "1.1.5"
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.spring") version "2.0.0"
-    kotlin("plugin.jpa") version "2.0.0"
-    kotlin("plugin.allopen") version "2.0.0"
+    id("org.springframework.boot") version "3.5.0"
+    id("io.spring.dependency-management") version "1.1.7"
+    kotlin("jvm") version "2.1.21"
+    kotlin("plugin.spring") version "2.1.21"
+    kotlin("plugin.jpa") version "2.1.21"
+    kotlin("plugin.allopen") version "2.1.21"
 }
 
 group = "io.github.liqiha0"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
@@ -35,6 +37,10 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0")
 
+    // 微信相关
+    implementation("com.github.binarywang:wx-java-miniapp-spring-boot-starter:4.7.0")
+    implementation("com.github.binarywang:wx-java-pay-spring-boot-starter:4.7.0")
+
     runtimeOnly("org.postgresql:postgresql")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -48,7 +54,7 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
-tasks.withType<KotlinCompile> {
+kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")
         jvmTarget = JvmTarget.JVM_21

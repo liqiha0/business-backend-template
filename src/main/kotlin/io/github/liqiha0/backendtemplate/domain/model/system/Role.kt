@@ -7,7 +7,9 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.UuidGenerator
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import java.util.*
 
 @Entity
@@ -16,6 +18,8 @@ class Role(
     @Type(JsonType::class)
     @Schema(description = "权限", example = "[\"ADMINISTRATOR\"]")
     var authority: Set<String>,
+    @Schema(description = "是否为内置角色")
+    var isBuiltin: Boolean = false
 ) : AuditableAggregateRoot<Role>() {
 
     init {
@@ -35,4 +39,17 @@ class Role(
         internal set
 }
 
-interface RoleRepository : JpaRepository<Role, UUID>
+interface RoleRepository : JpaRepository<Role, UUID>, JpaSpecificationExecutor<Role>
+
+fun displayNameEqual(displayName: String): Specification<Role> {
+    return Specification<Role> { root, query, criteriaBuilder ->
+        criteriaBuilder.equal(root.get<String>("displayName"), displayName)
+    }
+}
+
+fun displayNameLike(displayName: String): Specification<Role> {
+    return Specification<Role> { root, query, criteriaBuilder ->
+        criteriaBuilder.like(root.get("displayName"), displayName)
+    }
+}
+

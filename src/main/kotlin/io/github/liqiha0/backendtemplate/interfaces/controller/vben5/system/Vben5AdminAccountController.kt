@@ -1,11 +1,11 @@
-package io.github.liqiha0.backendtemplate.interfaces.controller.vben.system
+package io.github.liqiha0.backendtemplate.interfaces.controller.vben5.system
 
-import io.github.liqiha0.backendtemplate.domain.service.system.AdminAccountService
 import io.github.liqiha0.backendtemplate.domain.model.system.AdminAccount
 import io.github.liqiha0.backendtemplate.domain.model.system.AdminAccountRepository
-import io.github.liqiha0.backendtemplate.interfaces.controller.vben.VbenResponse
+import io.github.liqiha0.backendtemplate.domain.service.system.AdminAccountService
 import io.github.liqiha0.backendtemplate.interfaces.controller.vben.VbenResult
 import io.github.liqiha0.backendtemplate.interfaces.controller.vben.vbenSuccess
+import io.github.liqiha0.backendtemplate.interfaces.controller.vben5.Vben5Response
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Page
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/vben/admin-account")
-@VbenResponse
-@Tag(name = "Vben/管理员账户")
-class VbenAdminAccountController(
+@RequestMapping("/vben5/admin-account")
+@Vben5Response
+@Tag(name = "Vben5/管理员账户")
+class Vben5AdminAccountController(
     private val repository: AdminAccountRepository,
     private val adminAccountService: AdminAccountService,
 ) {

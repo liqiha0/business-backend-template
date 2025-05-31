@@ -27,7 +27,7 @@ class AuthorityRegistry(
         return authorities[key]
     }
 
-    fun getAllAuthorities(): Collection<Authority> {
-        return authorities.values
+    fun getAllAuthorities(): List<Authority> {
+        return authorities.values.toList()
     }
 }

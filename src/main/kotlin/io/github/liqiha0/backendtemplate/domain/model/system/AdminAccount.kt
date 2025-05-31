@@ -1,10 +1,8 @@
 package io.github.liqiha0.backendtemplate.domain.model.system
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import io.hypersistence.utils.hibernate.type.json.JsonType
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.Entity
-import org.hibernate.annotations.Type
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
@@ -19,9 +17,8 @@ class AdminAccount(
     @Schema(description = "用户名")
     val username: String,
     password: String,
-    @Type(JsonType::class)
-    var roleIds: Set<UUID> = emptySet(),
-) : Account<AdminAccount>(displayName) {
+    roleIds: Set<UUID> = emptySet()
+) : Account<AdminAccount>(displayName, roleIds = roleIds) {
 
     init {
         check(this.username.isNotBlank())

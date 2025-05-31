@@ -8,6 +8,6 @@ interface Authority {
 
 object Administrator : Authority {
     override val key: String = "ADMINISTRATOR"
-    override val displayName: String = "Administrator"
+    override val displayName: String = "超级权限"
     override val parent: Authority? = null
 }

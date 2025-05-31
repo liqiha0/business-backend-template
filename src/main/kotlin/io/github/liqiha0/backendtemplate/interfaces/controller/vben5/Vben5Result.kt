@@ -1,4 +1,4 @@
-package io.github.liqiha0.backendtemplate.interfaces.controller.vben
+package io.github.liqiha0.backendtemplate.interfaces.controller.vben5
 
 import io.github.liqiha0.backendtemplate.domain.shared.BusinessException
 import org.slf4j.Logger
@@ -14,25 +14,25 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
 
 
-data class VbenResult<T>(
-    val result: T?,
-    val message: String?,
+data class Vben5Result<T>(
+    val data: T?,
     val code: Int,
-    val type: String,
+    val message: String? = null,
+    val error: String? = null,
 )
 
-fun <T> vbenSuccess(result: T? = null): VbenResult<T> {
-    return VbenResult(result, "ok", 0, "success")
+fun <T> vben5Success(data: T? = null): Vben5Result<T> {
+    return Vben5Result(data, 0, "ok")
 }
 
-fun <T> vbenError(message: String? = null, code: Int = -1): VbenResult<T> {
-    return VbenResult(null, message, code, "error")
+fun <T> vben5Error(message: String? = null, code: Int = -1): Vben5Result<T> {
+    return Vben5Result(null, code, message)
 }
 
-annotation class VbenResponse
+annotation class Vben5Response
 
-@ControllerAdvice(annotations = [VbenResponse::class])
-class VbenResponseWrapper : ResponseBodyAdvice<Any> {
+@ControllerAdvice(annotations = [Vben5Response::class])
+class Vben5ResponseWrapper : ResponseBodyAdvice<Any> {
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     override fun supports(returnType: MethodParameter, converterType: Class<out HttpMessageConverter<*>>): Boolean {
@@ -48,28 +48,28 @@ class VbenResponseWrapper : ResponseBodyAdvice<Any> {
         response: ServerHttpResponse,
     ): Any? {
         try {
-            if (body is VbenResult<*>) return body
-            return vbenSuccess(body)
+            if (body is Vben5Result<*>) return body
+            return vben5Success(body)
         } catch (e: Exception) {
-            return vbenError<Unit>(e.message)
+            return vben5Error<Unit>(e.message)
         }
     }
 
     @ExceptionHandler(BusinessException::class)
-    fun businessException(e: BusinessException): ResponseEntity<VbenResult<Unit>> {
+    fun businessException(e: BusinessException): ResponseEntity<Vben5Result<Unit>> {
         val firstStackTrace = e.stackTrace[0]
         this.logger.warn(
-            "Vben业务异常：{}.{} {}",
+            "Vben5业务异常：{}.{} {}",
             firstStackTrace.className,
             firstStackTrace.methodName,
             e.message
         )
-        return ResponseEntity.ok(vbenError(e.message))
+        return ResponseEntity.ok(vben5Error(e.message))
     }
 
     @ExceptionHandler(Exception::class)
-    fun unknownException(e: Exception): ResponseEntity<VbenResult<Unit>> {
+    fun unknownException(e: Exception): ResponseEntity<Vben5Result<Unit>> {
         e.printStackTrace()
-        return ResponseEntity.ok(vbenError(e.message))
+        return ResponseEntity.ok(vben5Error(e.message))
     }
 }
