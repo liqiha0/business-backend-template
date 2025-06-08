@@ -51,7 +51,12 @@ class SecurityConfig {
         }
         http.authorizeHttpRequests {
             it.requestMatchers(HttpMethod.GET, "/api-docs/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-            it.requestMatchers(HttpMethod.POST, "/vben/login").permitAll()
+
+            it.requestMatchers(HttpMethod.GET, "/api/login/**")
+            it.requestMatchers(HttpMethod.POST, "/api/upload")
+
+            it.requestMatchers(HttpMethod.POST, "/vben/login", "/vben5/auth/login", "/vben5/upload").permitAll()
+
             it.anyRequest().authenticated()
         }
 
