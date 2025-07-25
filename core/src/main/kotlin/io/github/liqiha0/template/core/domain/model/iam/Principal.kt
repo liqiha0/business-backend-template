@@ -11,17 +11,20 @@ import java.util.*
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-class Account(
+class Principal(
     @Type(JsonType::class)
     @Column(nullable = false)
     var roleIds: Set<UUID> = emptySet(),
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn("account_id")
+    @JoinColumn("principal_id")
+    var identities: MutableSet<Identity>,
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn("principal_id")
     var credentials: MutableSet<Credential>,
     disabled: Boolean = false
-) : AuditableAggregateRoot<Account>() {
+) : AuditableAggregateRoot<Principal>() {
     init {
-        require(credentials.isNotEmpty())
+        require(identities.isNotEmpty())
     }
 
     @Id
@@ -38,8 +41,12 @@ class Account(
         }
 }
 
-inline fun <reified T : Credential> Account.getCredential(): T? {
+inline fun <reified T : Identity> Principal.getIdentity(): T? {
+    return this.identities.find { it is T } as T?
+}
+
+inline fun <reified T : Credential> Principal.getCredential(): T? {
     return this.credentials.find { it is T } as T?
 }
 
-interface AccountRepository : JpaRepository<Account, UUID>, JpaSpecificationExecutor<Account>
+interface PrincipalRepository : JpaRepository<Principal, UUID>, JpaSpecificationExecutor<Principal>

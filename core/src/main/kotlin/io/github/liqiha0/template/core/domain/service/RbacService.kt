@@ -10,7 +10,7 @@ import java.util.*
 
 @Service
 class RbacService(
-    private val accountRepository: AccountRepository,
+    private val principalRepository: PrincipalRepository,
     private val roleRepository: RoleRepository,
     private val authorityRegistry: AuthorityRegistry,
 ) {
@@ -44,10 +44,10 @@ class RbacService(
     }
 
     fun getAuthoritiesOfAccount(id: UUID): Set<Authority> {
-        val account = this.accountRepository.findByIdOrNull(id) ?: throw NoSuchElementException()
-        val usernamePasswordCredential = account.getCredential<UsernamePasswordCredential>()
+        val account = this.principalRepository.findByIdOrNull(id) ?: throw NoSuchElementException()
+        val usernameIdentity = account.getIdentity<UsernameIdentity>()
 
-        if (usernamePasswordCredential != null && usernamePasswordCredential.username == DEFAULT_ADMIN_USERNAME) {
+        if (usernameIdentity != null && usernameIdentity.username == DEFAULT_ADMIN_USERNAME) {
             return setOf(Administrator)
         }
 

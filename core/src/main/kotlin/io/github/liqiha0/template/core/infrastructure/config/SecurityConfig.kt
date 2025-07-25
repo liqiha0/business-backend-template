@@ -36,9 +36,9 @@ class SecurityConfig {
     @Bean
     fun filterChain(
         http: HttpSecurity,
-        commonSecurityCustomizer: ApiSecurityConfigurer
+        apiSecurityCustomizer: ApiSecurityConfigurer
     ): SecurityFilterChain {
-        http.with(commonSecurityCustomizer, Customizer.withDefaults())
+        http.with(apiSecurityCustomizer, Customizer.withDefaults())
         http.authorizeHttpRequests {
             it.requestMatchers(HttpMethod.GET, "/h2-console/**").permitAll()
             it.requestMatchers(HttpMethod.GET, "/api-docs/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()

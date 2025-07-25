@@ -1,4 +1,4 @@
-create table account
+create table principal
 (
     id                 uuid primary key         not null,
     created_by         uuid,
@@ -8,6 +8,44 @@ create table account
     role_ids           jsonb                    not null,
     disabled           boolean                  not null
 );
+
+create table identity
+(
+    id           uuid primary key not null,
+    principal_id uuid references principal (id)
+);
+
+create table username_identity
+(
+    id       uuid primary key references identity (id) not null,
+    username text unique                               not null
+);
+
+create table phone_identity
+(
+    id    uuid primary key references identity (id) not null,
+    phone text unique                               not null
+);
+
+create table wechat_identity
+(
+    id       uuid primary key references identity (id) not null,
+    open_id  text unique                               not null,
+    union_id text unique
+);
+
+create table credential
+(
+    id           uuid primary key not null,
+    principal_id uuid references principal (id)
+);
+
+create table password_credential
+(
+    id            uuid primary key references credential (id) not null,
+    password_hash text                                        not null
+);
+
 
 create table role
 (
@@ -28,34 +66,21 @@ create table token
     created_date       timestamp with time zone not null,
     last_modified_by   uuid,
     last_modified_date timestamp with time zone not null,
-    account_id         uuid                     not null,
+    principal_id       uuid                     not null,
     refresh_token      text,
     unique (refresh_token)
 );
 
-CREATE TABLE credential
-(
-    id         UUID primary key NOT NULL,
-    account_id uuid references account (id)
-);
+create index idx_token_principal_id on token (principal_id);
 
-CREATE TABLE phone_credential
+create table system_configuration
 (
-    id    UUID primary key references credential (id) NOT NULL,
-    phone text                                        not null
-);
-
-CREATE TABLE username_password_credential
-(
-    id            UUID primary key references credential (id) NOT NULL,
-    username      text                                        not null,
-    password_hash text                                        not null
-);
-
-CREATE TABLE wechat_credential
-(
-    id          UUID primary key references credential (id) NOT NULL,
-    open_id     text                                        not null,
-    session_key text                                        not null,
-    union_id    text
+    key_group          text                     not null,
+    key_name           text                     not null,
+    created_by         uuid,
+    created_date       timestamp with time zone not null,
+    last_modified_by   uuid,
+    last_modified_date timestamp with time zone not null,
+    value              text                     not null,
+    primary key (key_group, key_name)
 );

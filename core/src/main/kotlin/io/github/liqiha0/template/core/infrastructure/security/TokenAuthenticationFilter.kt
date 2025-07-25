@@ -14,7 +14,7 @@ class TokenAuthenticationFilter(
         val token = request.getHeader("Authorization")?.removePrefix("Bearer ")
         if (token != null) {
             val tokenEntity = tokenRepository.findOne(accessTokenEqual(token)).getOrNull()
-            return tokenEntity?.accountId
+            return tokenEntity?.principalId
         } else {
             return null
         }

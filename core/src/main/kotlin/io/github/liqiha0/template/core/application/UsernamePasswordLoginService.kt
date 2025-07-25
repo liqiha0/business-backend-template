@@ -1,6 +1,6 @@
 package io.github.liqiha0.template.core.application
 
-import io.github.liqiha0.template.core.domain.model.iam.AccountRepository
+import io.github.liqiha0.template.core.domain.model.iam.PrincipalRepository
 import io.github.liqiha0.template.core.domain.model.iam.Token
 import io.github.liqiha0.template.core.domain.service.TokenManager
 import io.github.liqiha0.template.core.domain.shared.BusinessException
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
 @Service
 class UsernamePasswordLoginService(
     private val authenticationManager: AuthenticationManager,
-    private val accountRepository: AccountRepository,
+    private val principalRepository: PrincipalRepository,
     private val tokenManager: TokenManager
 ) {
     fun login(username: String, password: String): Token {
@@ -31,7 +31,7 @@ class UsernamePasswordLoginService(
         }
 
         val userDetails = authentication.principal as UserDetails
-        val account = accountRepository.findByIdOrNull(userDetails.accountId)
+        val account = principalRepository.findByIdOrNull(userDetails.accountId)
             ?: throw BusinessException("用户不存在")
 
         return tokenManager.createToken(account.id)

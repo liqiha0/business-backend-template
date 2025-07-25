@@ -10,20 +10,20 @@ import kotlin.jvm.optionals.getOrNull
 //@ConditionalOnBean(WxMaMultiServices::class)
 class WechatService(
     private val wxMaMultiServices: WxMaMultiServices,
-    private val accountRepository: AccountRepository,
-    private val accountFactory: AccountFactory
+    private val principalRepository: PrincipalRepository,
+    private val principalFactory: PrincipalFactory
 ) {
 
     @Transactional
-    fun findOrRegisterUserWithPhone(appName: String, code: String, phoneCode: String): Account {
+    fun findOrRegisterUserWithPhone(appName: String, code: String, phoneCode: String): Principal {
         val phoneInfo = this.wxMaMultiServices.getWxMaService(appName).userService.getPhoneNumber(phoneCode)
         val result = this.wxMaMultiServices.getWxMaService(appName).jsCode2SessionInfo(code)
-        var account = this.accountRepository.findOne(AccountSpecifications.hasPhone(phoneInfo.purePhoneNumber))
+        var account = this.principalRepository.findOne(PrincipalSpecifications.hasPhone(phoneInfo.purePhoneNumber))
             .getOrNull()
         if (account == null) {
-            account = this.accountFactory.createWithPhone(phoneInfo.purePhoneNumber)
-            account.credentials.add(WechatCredential(result.openid, result.sessionKey, result.unionid))
-            this.accountRepository.save(account)
+            account = this.principalFactory.createWithPhone(phoneInfo.purePhoneNumber)
+            account.identities.add(WechatIdentity(result.openid, result.unionid))
+            this.principalRepository.save(account)
         }
 
         return account

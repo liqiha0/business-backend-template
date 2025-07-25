@@ -5,27 +5,15 @@ import java.util.*
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-abstract class Credential() {
+abstract class Credential {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     lateinit var id: UUID
-        internal set
+        protected set
 }
 
 @Entity
-class UsernamePasswordCredential(
-    val username: String,
+class PasswordCredential(
+    @Column(nullable = false)
     var passwordHash: String
-) : Credential()
-
-@Entity
-class WechatCredential(
-    val openId: String,
-    var sessionKey: String,
-    val unionId: String? = null
-) : Credential()
-
-@Entity
-class PhoneCredential(
-    val phone: String
 ) : Credential()

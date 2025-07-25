@@ -10,7 +10,7 @@ import java.util.*
 
 @Entity
 class Token(
-    val accountId: UUID,
+    val principalId: UUID,
     @Id val accessToken: String,
     val refreshToken: String? = null,
 ) : AuditableAggregateRoot<Token>() {
@@ -26,6 +26,6 @@ fun accessTokenEqual(accessToken: String): Specification<Token> = Specification<
     criteriaBuilder.equal(root.get<String>("accessToken"), accessToken)
 }
 
-fun userIdEqual(userId: UUID): Specification<Token> = Specification<Token> { root, _: Any?, criteriaBuilder ->
-    criteriaBuilder.equal(root.get<UUID>("userId"), userId)
+fun principalIdEqual(userId: UUID): Specification<Token> = Specification<Token> { root, _: Any?, criteriaBuilder ->
+    criteriaBuilder.equal(root.get<UUID>("principalId"), userId)
 }
