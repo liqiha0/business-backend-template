@@ -2,7 +2,7 @@ package io.github.liqiha0.template.core.application
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.liqiha0.template.core.domain.config.ConfigurationEnum
+import io.github.liqiha0.template.core.domain.config.ConfigurationKey
 import io.github.liqiha0.template.core.domain.config.SystemConfiguration
 import io.github.liqiha0.template.core.domain.config.SystemConfigurationId
 import io.github.liqiha0.template.core.domain.config.SystemConfigurationRepository
@@ -16,9 +16,10 @@ class SystemConfigurationService(
 ) {
 
     @Transactional(readOnly = true)
-    fun <T> getValue(key: ConfigurationEnum<*, T>): T? {
-        val id = SystemConfigurationId(key.javaClass.name, (key as Enum<*>).name)
+    fun <T> getValue(key: ConfigurationKey<T>): T? {
+        val id = SystemConfigurationId(key)
         val fromDb = repository.findById(id).map { it.value }
+
         if (fromDb.isPresent) {
             val jsonNode = fromDb.get()
             if (jsonNode.isNull) {
@@ -26,15 +27,16 @@ class SystemConfigurationService(
             }
             return objectMapper.treeToValue(jsonNode, key.valueType)
         }
+
         return key.defaultValue
     }
 
     @Transactional
-    fun setValue(key: Enum<*>, value: Any?) {
-        val id = SystemConfigurationId(key.javaClass.name, key.name)
+    fun <T> setValue(key: ConfigurationKey<T>, value: T?) {
+        val id = SystemConfigurationId(key)
         val jsonValue: JsonNode = objectMapper.valueToTree(value)
         val config = repository.findById(id).orElseGet {
-            SystemConfiguration(keyGroup = id.keyGroup, keyName = id.keyName, value = jsonValue)
+            SystemConfiguration(key, jsonValue)
         }
         config.value = jsonValue
         repository.save(config)
