@@ -1,19 +1,24 @@
 spring:
-  profiles:
-    active: dev
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_UPPER=false
+  h2:
+    console:
+      enabled: true
   jpa:
     open-in-view: true
-    hibernate:
-      ddl-auto: validate
+#    hibernate:
+#      ddl-auto: validate
     properties:
       hibernate:
         globally_quoted_identifiers: true
+        event.pre-delete: io.github.liqiha0.template.core.infrastructure.hibernate.SoftDeleteEventListener
   data:
-    rest:
-      detection-strategy: annotated
     web:
       pageable:
         one-indexed-parameters: true
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 0
   quartz:
     job-store-type: jdbc
     jdbc:
@@ -23,5 +28,3 @@ spring:
         quartz:
           jobStore:
             driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
-  flyway:
-    out-of-order: true
