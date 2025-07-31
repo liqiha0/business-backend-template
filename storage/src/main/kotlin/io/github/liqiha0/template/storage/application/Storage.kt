@@ -12,4 +12,6 @@ interface Storage {
         originalName: String? = null,
         private: Boolean = true,
     ): Path
+
+    fun generateUploadUrl(fileName: String, subDir: Path? = null, contentType: String? = null): String
 }

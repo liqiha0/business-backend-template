@@ -13,13 +13,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    api("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     api("org.flywaydb:flyway-core")
     api("org.flywaydb:flyway-database-postgresql")
 
-    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.8.1")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0")
+    api("org.locationtech.jts:jts-core:1.20.0")
+    implementation("org.hibernate.orm:hibernate-spatial")
+    api("io.hypersistence:hypersistence-utils-hibernate-63:3.8.1")
+    implementation("org.n52.jackson:jackson-datatype-jts:2.0.0")
+
+    api("org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0")
 
     compileOnly("com.github.binarywang:wx-java-miniapp-multi-spring-boot-starter:4.7.0")
 }

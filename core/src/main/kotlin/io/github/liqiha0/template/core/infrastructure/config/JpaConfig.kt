@@ -1,6 +1,6 @@
 package io.github.liqiha0.template.core.infrastructure.config
 
-import io.github.liqiha0.template.core.utils.accountId
+import io.github.liqiha0.template.core.utils.principalId
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.auditing.DateTimeProvider
@@ -22,7 +22,7 @@ class JpaConfig {
                 val principal = authentication.principal
                 try {
                     if (principal is User) {
-                        Optional.of(principal.accountId)
+                        Optional.of(principal.principalId)
                     } else {
                         Optional.empty()
                     }

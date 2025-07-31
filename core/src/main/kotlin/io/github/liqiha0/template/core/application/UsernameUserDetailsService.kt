@@ -23,7 +23,11 @@ class UsernameUserDetailsService(
     val rbacService: RbacService,
 ) : UserDetailsService {
     override fun loadUserByUsername(username: String): UserDetails {
-        val principal = this.principalRepository.findOne(PrincipalSpecifications.hasUsername(username)).getOrNull()
+        val principal = this.principalRepository.findOne(
+            PrincipalSpecifications.hasUsername(username).or(
+                PrincipalSpecifications.hasPhone(username)
+            )
+        ).getOrNull()
             ?: throw UsernameNotFoundException(username)
 
         val passwordCredential = principal.getCredential<PasswordCredential>()

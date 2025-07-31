@@ -9,7 +9,9 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.multipart.MultipartFile
 import java.io.BufferedInputStream
 import java.io.FileNotFoundException
 import java.io.InputStream
@@ -19,6 +21,7 @@ import java.nio.file.StandardCopyOption
 import java.util.*
 
 internal const val PUBLIC_ENDPOINT = "/file"
+internal const val UPLOAD_ENDPOINT = "/upload"
 
 class LocalStorage(
     val storagePath: Path,
@@ -54,11 +57,18 @@ class LocalStorage(
         }
 
         val targetPath = storagePath.resolve(filePath)
-        Files.createDirectories(targetPath)
+        Files.createDirectories(targetPath.parent) // Create parent directories if they don't exist
         inputStream.use { input ->
             Files.copy(input, targetPath, StandardCopyOption.REPLACE_EXISTING)
         }
         return filePath
+    }
+
+    override fun generateUploadUrl(fileName: String, subDir: Path?, contentType: String?): String {
+        // For local storage, this returns the URL to the backend upload endpoint.
+        // The actual file saving will happen on the server side.
+        val path = if (subDir != null) subDir.resolve(fileName) else Path.of(fileName)
+        return this.publicBaseUrl + UPLOAD_ENDPOINT + "?subDir=" + (subDir?.toString() ?: "") + "&originalName=" + fileName
     }
 }
 

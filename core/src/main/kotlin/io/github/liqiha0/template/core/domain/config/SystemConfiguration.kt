@@ -1,10 +1,13 @@
 package io.github.liqiha0.template.core.domain.config
 
+import com.fasterxml.jackson.databind.JsonNode
 import io.github.liqiha0.template.core.domain.shared.AuditableAggregateRoot
+import io.hypersistence.utils.hibernate.type.json.JsonType
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.IdClass
+import org.hibernate.annotations.Type
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import java.io.Serializable
@@ -22,7 +25,8 @@ class SystemConfiguration(
     val keyName: String,
 
     @Schema(description = "配置值")
-    var value: String
+    @Type(JsonType::class)
+    var value: JsonNode
 ) : AuditableAggregateRoot<SystemConfiguration>()
 
 data class SystemConfigurationId(

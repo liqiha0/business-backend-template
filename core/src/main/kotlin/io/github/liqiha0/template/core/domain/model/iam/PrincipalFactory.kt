@@ -11,43 +11,71 @@ class PrincipalFactory(private val passwordEncoder: PasswordEncoder) {
         require(username.isNotBlank())
         require(password.isNotBlank())
 
-        val identity = UsernameIdentity(username)
-        val passwordHash = passwordEncoder.encode(password)
-        val credential = PasswordCredential(passwordHash)
+        val identities = mutableSetOf<Identity>(UsernameIdentity(username))
+        val credentials = mutableSetOf<Credential>(PasswordCredential(passwordEncoder.encode(password)))
 
-        return Principal(
-            roleIds = roleIds,
-            identities = mutableSetOf(identity),
-            credentials = mutableSetOf(credential)
-        )
+        return createPrincipal(roleIds, identities, credentials)
     }
 
-    fun createWithPhone(
-        phone: String,
-        roleIds: Set<UUID> = emptySet()
-    ): Principal {
+    fun createWithPhone(phone: String, roleIds: Set<UUID> = emptySet()): Principal {
         require(phone.isNotBlank())
 
-        val identity = PhoneIdentity(phone)
-        return Principal(
-            roleIds = roleIds,
-            identities = mutableSetOf(identity),
-            credentials = mutableSetOf()
-        )
+        val identities = mutableSetOf<Identity>(PhoneIdentity(phone))
+        val credentials = mutableSetOf<Credential>()
+
+        return createPrincipal(roleIds, identities, credentials)
     }
 
-    fun createWithWechat(
-        openId: String,
+    fun createWithPhonePassword(phone: String, password: String, roleIds: Set<UUID> = emptySet()): Principal {
+        require(phone.isNotBlank())
+        require(password.isNotBlank())
+
+        val identities = mutableSetOf<Identity>(PhoneIdentity(phone))
+        val credentials = mutableSetOf<Credential>(PasswordCredential(passwordEncoder.encode(password)))
+
+        return createPrincipal(roleIds, identities, credentials)
+    }
+
+    fun createWithWechat(openId: String, unionId: String? = null, roleIds: Set<UUID> = emptySet()): Principal {
+        require(openId.isNotBlank())
+
+        val identities = mutableSetOf<Identity>(WechatIdentity(openId, unionId))
+        val credentials = mutableSetOf<Credential>()
+
+        return createPrincipal(roleIds, identities, credentials)
+    }
+
+    fun create(
+        username: String? = null,
+        password: String? = null,
+        phone: String? = null,
+        openId: String? = null,
         unionId: String? = null,
         roleIds: Set<UUID> = emptySet()
     ): Principal {
-        require(openId.isNotBlank())
+        val identities = mutableSetOf<Identity>()
+        val credentials = mutableSetOf<Credential>()
 
-        val identity = WechatIdentity(openId, unionId)
+        username?.let { identities.add(UsernameIdentity(it)) }
+        phone?.let { identities.add(PhoneIdentity(it)) }
+        openId?.let { identities.add(WechatIdentity(it, unionId)) }
+
+        password?.let { credentials.add(PasswordCredential(passwordEncoder.encode(it))) }
+
+        require(identities.isNotEmpty())
+
+        return createPrincipal(roleIds, identities, credentials)
+    }
+
+    private fun createPrincipal(
+        roleIds: Set<UUID>,
+        identities: MutableSet<Identity>,
+        credentials: MutableSet<Credential>
+    ): Principal {
         return Principal(
             roleIds = roleIds,
-            identities = mutableSetOf(identity),
-            credentials = mutableSetOf()
+            identities = identities,
+            credentials = credentials
         )
     }
 }

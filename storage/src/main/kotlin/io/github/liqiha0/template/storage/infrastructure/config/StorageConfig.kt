@@ -1,6 +1,7 @@
 package io.github.liqiha0.template.storage.infrastructure.config
 
 import io.github.liqiha0.template.storage.application.Storage
+import io.github.liqiha0.template.storage.infrastructure.AliyunOssStorage
 import io.github.liqiha0.template.storage.infrastructure.filestorage.LocalStorage
 import io.github.liqiha0.template.storage.infrastructure.filestorage.PUBLIC_ENDPOINT
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -25,10 +26,22 @@ class StorageConfig {
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "storage", name = ["backend"], havingValue = "ALIYUN_OSS")
+    fun aliyunOssStorageService(aliyunOssProperties: AliyunOssProperties): Storage {
+        return AliyunOssStorage(
+            endpoint = aliyunOssProperties.endpoint!!,
+            accessKeyId = aliyunOssProperties.accessKeyId!!,
+            accessKeySecret = aliyunOssProperties.accessKeySecret!!,
+            bucketName = aliyunOssProperties.bucketName!!,
+            presignedUrlExpirationMinutes = aliyunOssProperties.presignedUrlExpirationMinutes
+        )
+    }
+
+    @Bean
     // TODO: 尝试移除顺序配置
     @Order(Ordered.HIGHEST_PRECEDENCE)
     fun fileStorageFilterChain(http: HttpSecurity): DefaultSecurityFilterChain {
-        http.securityMatcher(PUBLIC_ENDPOINT)
+        http.securityMatcher(PUBLIC_ENDPOINT, "/storage/generate-upload-url")
         http.authorizeHttpRequests {
             it.anyRequest().permitAll()
         }
@@ -39,12 +52,15 @@ class StorageConfig {
 @ConfigurationProperties(prefix = "storage")
 data class StorageProperty(
     val backend: StorageBackend = StorageBackend.NONE,
-    val local: LocalStorageProperty? = null
+    val local: LocalStorageProperty? = null,
+    val aliyunOss: AliyunOssProperties? = null,
+    val enableUploadUrlGenerationApi: Boolean = true
 )
 
 class LocalStorageProperty(val publicBaseUrl: String, val path: Path)
 
 enum class StorageBackend {
     NONE,
-    LOCAL
+    LOCAL,
+    ALIYUN_OSS
 }

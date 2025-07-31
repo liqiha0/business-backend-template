@@ -4,7 +4,7 @@ import io.github.liqiha0.template.core.domain.model.iam.PrincipalRepository
 import io.github.liqiha0.template.core.domain.model.iam.Token
 import io.github.liqiha0.template.core.domain.service.TokenManager
 import io.github.liqiha0.template.core.domain.shared.BusinessException
-import io.github.liqiha0.template.core.utils.accountId
+import io.github.liqiha0.template.core.utils.principalId
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
@@ -31,7 +31,7 @@ class UsernamePasswordLoginService(
         }
 
         val userDetails = authentication.principal as UserDetails
-        val account = principalRepository.findByIdOrNull(userDetails.accountId)
+        val account = principalRepository.findByIdOrNull(userDetails.principalId)
             ?: throw BusinessException("用户不存在")
 
         return tokenManager.createToken(account.id)

@@ -50,7 +50,8 @@ enum class PaymentStatus {
 
 enum class PaymentChannel {
     ALIPAY,
-    WECHAT_PAY
+    WECHAT_PAY,
+    BALANCE
 }
 
 class OrderCreatedEvent(val orderId: String)

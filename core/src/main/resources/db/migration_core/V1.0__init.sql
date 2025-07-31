@@ -1,3 +1,5 @@
+create extension postgis;
+
 create table principal
 (
     id                 uuid primary key         not null,
@@ -81,6 +83,6 @@ create table system_configuration
     created_date       timestamp with time zone not null,
     last_modified_by   uuid,
     last_modified_date timestamp with time zone not null,
-    value              text                     not null,
+    value              jsonb                    not null,
     primary key (key_group, key_name)
 );
