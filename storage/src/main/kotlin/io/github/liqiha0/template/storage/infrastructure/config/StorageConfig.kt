@@ -27,7 +27,7 @@ class StorageConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "storage", name = ["backend"], havingValue = "ALIYUN_OSS")
-    fun aliyunOssStorageService(aliyunOssProperties: AliyunOssProperties): Storage {
+    fun aliyunOssStorage(aliyunOssProperties: AliyunOssProperties): Storage {
         return AliyunOssStorage(
             endpoint = aliyunOssProperties.endpoint!!,
             accessKeyId = aliyunOssProperties.accessKeyId!!,

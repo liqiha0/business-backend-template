@@ -27,7 +27,6 @@ class AliyunOssStorage(
 
     private val ossClient: OSS by lazy {
         val clientBuilderConfiguration = ClientBuilderConfiguration()
-        clientBuilderConfiguration.setSignatureVersion(SignVersion.V4)
         clientBuilderConfiguration.setProtocol(Protocol.HTTPS)
         OSSClientBuilder.create(
         ).endpoint(endpoint)
